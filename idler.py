@@ -1,26 +1,32 @@
-from flask import Flask, request, jsonify
-from model.action import Attack
+from flask import Flask, request, jsonify, session
+from model.character import Character
+from messages import SUCCESS,ERROR
 
 app = Flask(__name__)
+app.secret_key = "Secret Szechuan Sauce"
+
 
 @app.route('/')
 def index():
-    return "hello world"
 # way #1 to do things
-@app.route('/action/attack', methods=['POST'])
-def attack():
+
+@app.route('/login',methods=['POST'])
+def login():
     json = request.get_json()
-    # handle request
-    # make response
-    return jsonify(response)
+    session['username'] = json['username']
+    session['character'] = Character()
+    session['resources'] = Resources()
+    return jsonify(SUCCESS)
 
-#way #2  more modular
-
-app.add_url_rul('/action/attack2',view_func=Attack.as_view('attack',methods=['POST']))
-
-
-    
-
+@app.route('/logout', methods=['POST'])
+def logout():
+    if 'username' in session:
+        session.pop('username')
+        session.pop('character')
+        return jsonify(SUCCESS)
+    else:
+        ERROR.error = 'not logged in'
+        return jsonify(ERROR)
 
 if __name__ == '__main__':
     app.run()
