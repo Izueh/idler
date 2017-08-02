@@ -8,6 +8,7 @@ app.secret_key = "Secret Szechuan Sauce"
 
 @app.route('/')
 def index():
+    return "Hello World!"
 # way #1 to do things
 
 @app.route('/login',methods=['POST'])
@@ -15,7 +16,6 @@ def login():
     json = request.get_json()
     session['username'] = json['username']
     session['character'] = Character()
-    session['resources'] = Resources()
     session['gold'] = 0
     return jsonify(SUCCESS)
 
@@ -44,15 +44,12 @@ def fight():
     results = fight(session['character'],session['enemy'])
     if results.status == 'completed':
         # loot should generate gold based on character level, and the active resources 
-        session['gold'] += loot(session['character'].level,session['resources'])
+        session['gold'] += loot(session['character'].level )
         if resource_found():
             session['resource'].append(Resource())
 
     return jsonify(results)
 
-@app.route()
-
-@app.route('')
 if __name__ == '__main__':
     app.run()
 
